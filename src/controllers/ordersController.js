@@ -1,5 +1,4 @@
 import * as ordersRepositories from "../repositories/ordersRepositories.js";
-import connection from '../database/db.js';
 
 async function createOrder(req, res){
     const { clientId, cakeId, quantity } = req.body;
@@ -48,6 +47,18 @@ async function getOrders(req, res){
     }
 }
 
+async function getOrderById(req, res){
+    const { id } = req.params;
+
+    const order = await ordersRepositories.getOrder(id);
+
+    if(order.rowCount === 0){
+        return res.sendStatus(404);
+    }
+
+    res.status(200).send(order.rows.map(_mapOrdersArrayToObject));
+}
+
 function _mapOrdersArrayToObject(row){
     const [
         id,
@@ -87,4 +98,4 @@ function _mapOrdersArrayToObject(row){
         
 }
 
-export { createOrder, getOrders };
+export { createOrder, getOrders, getOrderById };

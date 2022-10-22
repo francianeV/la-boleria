@@ -25,26 +25,40 @@ async function getOrders(date){
     return connection.query(
         {
         text: `
-        SELECT 
-            orders.id, 
-            "createAt", 
-            quantity, 
-            "totalPrice",
-            clients.id as "clientId", 
-            clients.name AS "name",
-            clients.address AS "address",
-            clients.phone AS phone,
-            cakes.id AS "cakeId",
-            cakes.name AS name,
-            cakes.price AS price,
-            cakes.description AS description,
-            cakes.image AS image
-        FROM orders 
-        JOIN clients ON clients.id = orders."clientId"
-        JOIN cakes ON orders."cakeId" = cakes.id ${findDate};  
+        ${query} ${findDate};  
     `,
     rowMode: 'array'},);
 }
+
+async function getOrder(id){
+    const findId = `WHERE orders.id = $1`;
+
+    return connection.query({
+        text: `
+        ${query} ${findId};  
+    `,
+    rowMode: 'array'},[id]);
+}
+
+const query = `
+    SELECT 
+        orders.id, 
+        "createAt", 
+        quantity, 
+        "totalPrice",
+        clients.id as "clientId", 
+        clients.name AS "name",
+        clients.address AS "address",
+        clients.phone AS phone,
+        cakes.id AS "cakeId",
+        cakes.name AS name,
+        cakes.price AS price,
+        cakes.description AS description,
+        cakes.image AS image
+    FROM orders 
+    JOIN clients ON clients.id = orders."clientId"
+    JOIN cakes ON orders."cakeId" = cakes.id  
+    `;
     
 
-export { createOrder, getClientId, getCakeId, getOrders };
+export { createOrder, getClientId, getCakeId, getOrders, getOrder };
