@@ -59,6 +59,18 @@ async function getOrderById(req, res){
     res.status(200).send(order.rows.map(_mapOrdersArrayToObject));
 }
 
+async function getClientOrders(req, res){
+    const { id } = req.params;
+
+    const clientOrders = await ordersRepositories.getClientOrders(id);
+
+    if(clientOrders.rowCount === 0){
+        return res.sendStatus(404);
+    }
+
+    res.status(200).send(clientOrders.rows)
+}
+
 function _mapOrdersArrayToObject(row){
     const [
         id,
@@ -98,4 +110,7 @@ function _mapOrdersArrayToObject(row){
         
 }
 
-export { createOrder, getOrders, getOrderById };
+export { createOrder, 
+         getOrders,
+         getOrderById, 
+         getClientOrders };

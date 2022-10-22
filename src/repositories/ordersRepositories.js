@@ -40,6 +40,20 @@ async function getOrder(id){
     rowMode: 'array'},[id]);
 }
 
+async function getClientOrders(id){
+    return connection.query(
+        `SELECT 
+            orders.id AS "orderId",
+            quantity,
+            "createAt",
+            "totalPrice",
+            cakes.name AS "cakeName"
+        FROM orders 
+        JOIN cakes ON orders."cakeId" = cakes.id
+        JOIN clients ON orders."clientId" = clients.id WHERE clients.id = $1`,[id]
+    )
+}
+
 const query = `
     SELECT 
         orders.id, 
@@ -61,4 +75,4 @@ const query = `
     `;
     
 
-export { createOrder, getClientId, getCakeId, getOrders, getOrder };
+export { createOrder, getClientId, getCakeId, getOrders, getOrder, getClientOrders };
