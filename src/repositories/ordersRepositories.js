@@ -68,10 +68,12 @@ const query = `
         cakes.name AS name,
         cakes.price AS price,
         cakes.description AS description,
-        cakes.image AS image
+        cakes.image AS image,
+        flavours.name AS "flavourName"
     FROM orders 
     JOIN clients ON clients.id = orders."clientId"
-    JOIN cakes ON orders."cakeId" = cakes.id  
+    JOIN cakes ON orders."cakeId" = cakes.id
+    JOIN flavours ON cakes."flavourId" = flavours.id 
     `;
     
 

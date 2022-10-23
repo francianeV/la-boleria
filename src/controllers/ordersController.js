@@ -85,7 +85,8 @@ function _mapOrdersArrayToObject(row){
         cakeName,
         price,
         description,
-        image
+        image,
+        flavourName
     ] = row;
 
     return {
@@ -100,7 +101,8 @@ function _mapOrdersArrayToObject(row){
             name: cakeName,
             price: price,
             description: description,
-            image: image
+            image: image,
+            flavour: flavourName
         },
         orderId: id,
         createAt,
