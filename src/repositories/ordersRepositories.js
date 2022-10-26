@@ -54,12 +54,23 @@ async function getClientOrders(id){
     )
 }
 
+async function getOrderById(id){
+    return connection.query(`
+        SELECT * FROM orders WHERE id = $1
+    `,[id]);
+}
+
+async function updateOrder(id){
+    return connection.query(`UPDATE orders SET "isDelivered" = TRUE WHERE id = $1;`,[id]);
+}
+
 const query = `
     SELECT 
         orders.id, 
-        "createAt", 
+        TO_CHAR("createAt", 'DD-MM-YYYY HH:MM'), 
         quantity, 
         "totalPrice",
+        "isDelivered",
         clients.id as "clientId", 
         clients.name AS "name",
         clients.address AS "address",
@@ -77,4 +88,4 @@ const query = `
     `;
     
 
-export { createOrder, getClientId, getCakeId, getOrders, getOrder, getClientOrders };
+export { createOrder, getClientId, getCakeId, getOrders, getOrder, getClientOrders, getOrderById, updateOrder };

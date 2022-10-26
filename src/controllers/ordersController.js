@@ -71,12 +71,37 @@ async function getClientOrders(req, res){
     res.status(200).send(clientOrders.rows)
 }
 
+async function isDelivered (req, res){
+    const { id } = req.params;
+
+    if(isNaN(id)){
+        return res.sendStatus(400);
+    }
+
+    try{
+        const order = await ordersRepositories.getOrderById(id);
+
+       if(order.rowCount === 0){
+            return res.sendStatus(404);
+       }
+
+       await ordersRepositories.updateOrder(id);
+        
+       res.sendStatus(204);
+
+    }catch(err){
+        console.log(err);
+        res.sendStatus(500);
+    }
+}
+
 function _mapOrdersArrayToObject(row){
     const [
         id,
         createAt,
         quantity,
-        totalPrice, 
+        totalPrice,
+        isDelivered, 
         clientId,
         clientName,
         address,
@@ -107,7 +132,8 @@ function _mapOrdersArrayToObject(row){
         orderId: id,
         createAt,
         quantity,
-        totalPrice
+        totalPrice,
+        isDelivered: isDelivered
     }
         
 }
@@ -115,4 +141,5 @@ function _mapOrdersArrayToObject(row){
 export { createOrder, 
          getOrders,
          getOrderById, 
-         getClientOrders };
+         getClientOrders,
+         isDelivered };
